@@ -1,7 +1,8 @@
 import subprocess, dotbot, json
-from os import path, remove
+from os import path, remove, environ
 from dotbot.util import module
 from io import open
+from shutil import which
 
 class Sudo(dotbot.Plugin):
     _directive = 'sudo'
@@ -33,7 +34,8 @@ class Sudo(dotbot.Plugin):
             self._log.lowinfo('sudo: begin subprocess')
             subprocess.check_call(
                 proc_args,
-                stdin=subprocess.PIPE)
+                stdin=subprocess.PIPE,
+                )
             self._log.lowinfo('sudo: end subprocess')
             self._delete_conf_file(sudo_conf)
             return True
@@ -60,7 +62,8 @@ class Sudo(dotbot.Plugin):
         base = path.dirname(path.dirname(dotbot.__file__))
         ret = path.join(base, 'bin', 'dotbot')
         self._log.debug('sudo: dotbot app path: {}'.format(ret))
-        return ret
+        # return ret
+        return which("dotbot")
 
     def _write_conf_file(self, conf_file, data):
         self._delete_conf_file(conf_file)
